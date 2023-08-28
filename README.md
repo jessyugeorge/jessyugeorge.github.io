@@ -1,8 +1,8 @@
 # jessyugeorge.github.io
-##Jessy George
+## Jessy George
 
-###Education
+### Education
 
-###Work Experience
+### Work Experience
 
-###Projects
+### Projects
