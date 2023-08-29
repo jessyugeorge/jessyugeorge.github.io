@@ -1,10 +1,7 @@
-# Jessy George
+
 ## SQL developer, Data Analyst
 
-### Work Experience
-Senior Software Programmer, Christ University Bangalore
-
-#### Skills: 
+### Skills: 
 - MySQL, PL/SQL
 - Power BI, Tableau, Data Studio
 - C, C++, Python, Java, R programming
