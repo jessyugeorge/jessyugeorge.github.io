@@ -1,4 +1,4 @@
-#Jessy George
+# Jessy George
 ## SQL developer, Data Analyst
 
 ### Work Experience
