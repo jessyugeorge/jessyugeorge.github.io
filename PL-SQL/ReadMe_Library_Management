@@ -1,0 +1,7 @@
+This folder contains PL-SQL code for handling Library Management.
+It has various features like
+- Login for employee, customer
+- View the status of an item
+- rent an item
+- Pay fines
+Other features are being added to this
