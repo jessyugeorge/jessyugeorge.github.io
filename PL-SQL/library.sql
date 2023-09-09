@@ -464,3 +464,103 @@ BEGIN
   money := &Money_To_Pay;
   payFines_library(auxCard,money);
 END;
+
+
+
+--6--
+--CUSTOMER--
+CREATE OR REPLACE PROCEDURE updateInfoCusto_library(auxCustomer IN customer.customerid%TYPE, pNumber NUMBER, address VARCHAR2, newPass VARCHAR2)
+IS
+BEGIN
+  UPDATE customer
+  SET phone = pNumber, customeraddress = address, password = newPass
+  WHERE customerid = auxCustomer;
+END;
+
+SET SERVEROUTPUT ON;
+DECLARE
+  auxCustomer customer.customerid%TYPE;
+  pNumber NUMBER;
+  address VARCHAR2(50);
+  newPass VARCHAR2(20);
+BEGIN
+  auxCustomer := &Customer_ID;
+  pNumber := &Write_your_new_phone_number_or_the_old_one_if_you_do_not_want_to_change_it;
+  address := '&Write_your_new_address_or_the_old_one_if_you_do_not_want_to_change_it';
+  newPass := '&Write_your_new_password_or_the_old_one_if_you_do_not_want_to_change_it';
+  updateInfoCusto_library(auxCustomer,pNumber,address,newPass);
+END;
+
+
+--EMPLOYEE--
+CREATE OR REPLACE PROCEDURE updateInfoEmp_library(auxEmployee IN employee.employeeid%TYPE, pNumber NUMBER, address VARCHAR2, newPass VARCHAR2, newPayCheck NUMBER,
+newBranch NUMBER)
+IS
+BEGIN
+  UPDATE employee
+  SET phone = pNumber, employeeaddress = address, password = newPass, paycheck = auxEmployee, branchID = newBranch
+  WHERE employeeid = auxEmployee;
+END;
+
+SET SERVEROUTPUT ON;
+DECLARE
+  auxEmployee employee.employeeid%TYPE;
+  pNumber NUMBER;
+  address VARCHAR2(50);
+  newPass VARCHAR2(20);
+  newPayCheck NUMBER;
+  newBranch NUMBER;
+BEGIN
+  auxEmployee := &Customer_ID;
+  pNumber := &Write_your_new_phone_number_or_the_old_one_if_you_do_not_want_to_change_it;
+  address := '&Write_your_new_address_or_the_old_one_if_you_do_not_want_to_change_it';
+  newPass := '&Write_your_new_password_or_the_old_one_if_you_do_not_want_to_change_it';
+  newPayCheck := '&Write_your_new_paycheck_or_the_old_one_if_you_do_not_want_to_change_it';
+  newBranch := &Write_your_new_branch_or_the_old_one_if_you_do_not_want_to_change_it;
+  updateInfoEmp_library(auxEmployee,pNumber,address,newPass,newPayCheck,newBranch);
+END;
+
+
+--7--
+--CUSTOMER--
+CREATE OR REPLACE TRIGGER addCardCusto_library
+AFTER INSERT
+ON customer
+FOR EACH ROW
+DECLARE
+BEGIN
+  INSERT INTO card
+  VALUES (:new.cardnumber,'A',0);
+  
+  DBMS_OUTPUT.PUT_LINE('Card created');
+END;
+--8--
+CREATE OR REPLACE PROCEDURE addCustomer_library(auxCustomerId IN NUMBER, auxName IN VARCHAR2, auxCustomerAddress IN VARCHAR2, auxPhone IN NUMBER,
+auxPass IN VARCHAR2, auxUserName IN VARCHAR2, auxCardNumber IN NUMBER)
+IS
+BEGIN
+  INSERT INTO customer
+  VALUES (auxCustomerId,auxName,auxCustomerAddress,auxPhone,auxPass,auxUserName,sysdate,auxCardNumber);
+END;
+
+SET SERVEROUTPUT ON;
+DECLARE
+  auxCustomerId NUMBER;
+  auxName VARCHAR2(20);
+  auxCustomerAddress VARCHAR2(20);
+  auxPhone NUMBER;
+  auxPass VARCHAR2(20);
+  auxUserName VARCHAR2(20);
+  auxCardNumber NUMBER;
+BEGIN
+  auxCustomerId := &Customer_ID;
+  auxName := '&Name';
+  auxCustomerAddress := '&Address';
+  auxPhone := &Phone;
+  auxPass := '&Password';
+  auxUserName := '&User_Name';
+  auxCardNumber := &Card_Number;
+  addCustomer_library(auxCustomerId,auxName,auxCustomerAddress,auxPhone,auxPass,auxUserName,auxCardNumber);
+END;
+
+
