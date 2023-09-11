@@ -564,3 +564,82 @@ BEGIN
 END;
 
 
+--9--
+CREATE OR REPLACE PROCEDURE allMedia_library(mediaType VARCHAR2)
+
+IS
+  CURSOR cBooks
+  IS
+    SELECT *
+    FROM book;
+    
+  xBooks cBooks%ROWTYPE;
+ 
+BEGIN
+  IF mediaType LIKE 'books' THEN
+    OPEN cBooks;
+    
+    DBMS_OUTPUT.PUT_LINE('ISBN     ID     STATE     AVALABILITY     DEBY_COST     LOST_COST    LOCATION');
+    DBMS_OUTPUT.PUT_LINE('-----------------------------------------------------------------------------');
+    
+    LOOP
+      FETCH cBooks
+      INTO xBooks;
+      EXIT WHEN cBooks%NOTFOUND;
+      
+      DBMS_OUTPUT.PUT_LINE(xBooks.isbn || '     ' || xBooks.bookid || '     ' || xBooks.state || '     ' || xBooks.avalability || '     ' || xBooks.debycost || '     ' ||
+      xBooks.lostcost || '     ' || xBooks.locationid);
+    END LOOP;
+  
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('TYPE INCORRECT, you must choose  books ');
+  END IF;
+END;
+
+SET SERVEROUTPUT ON;
+DECLARE
+  typeItem VARCHAR2(10);
+BEGIN
+  typeItem := '&Select_between_books_or_videos';
+  allMedia_library(typeItem);
+END;
+
+CREATE OR REPLACE PROCEDURE handleReturns_library(auxItemID IN VARCHAR2)
+IS
+  auxRented NUMBER;
+  auxBook NUMBER;
+ 
+BEGIN
+  SELECT COUNT(*) INTO auxRented
+  FROM rent
+  WHERE bookid LIKE auxItemID;
+  
+  SELECT COUNT(*) INTO auxBook
+  FROM book
+  WHERE bookid LIKE auxItemID;
+  
+  
+  
+  IF auxRented > 0 THEN
+    DELETE FROM rent
+    WHERE bookid = auxItemID;
+    IF auxBook > 0 THEN
+      UPDATE book
+      SET avalability = 'A'
+      WHERE bookid LIKE auxItemID;
+      DBMS_OUTPUT.PUT_LINE('The book ' || auxItemID || ' is now avaible.');
+   END IF;
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('This item is not rented at the moment');
+  END IF;
+  EXCEPTION WHEN no_data_found THEN 
+  DBMS_OUTPUT.PUT_LINE('Item ID incorrect');    
+END;
+
+SET SERVEROUTPUT ON;
+DECLARE
+  auxItemID VARCHAR2(10);
+BEGIN
+  auxItemID := '&ItemID_to_return';
+  handleReturns_library(auxItemID);
+END;
